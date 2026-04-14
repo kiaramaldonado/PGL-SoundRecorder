@@ -13,7 +13,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { COLORS } from "../theme/palette";
 
-const BUTTON_SIZE = 140;
+const BUTTON_SIZE = 200;
 
 export default function RecordButton() {
   const [isRecording, setIsRecording] = useState(false);
@@ -123,7 +123,7 @@ export default function RecordButton() {
           style={styles.button}
           onPress={() => setIsRecording(!isRecording)}
         >
-          <FontAwesome6 name="microphone" size={70} color={COLORS.primary} />
+          <FontAwesome6 name="microphone" size={75} color={COLORS.primary} />
         </Pressable>
       </Animated.View>
     </View>
