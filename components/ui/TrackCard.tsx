@@ -7,8 +7,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { COLORS } from "../theme/palette";
-import { formatRelativeDate } from "../utils/formatter";
+import { COLORS } from "../../theme/palette";
+import { formatRelativeDate } from "../../utils/formatter";
 
 const ACTION_WIDTH = 80;
 

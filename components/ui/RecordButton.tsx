@@ -11,7 +11,7 @@ import Animated, {
   cancelAnimation,
   Easing,
 } from "react-native-reanimated";
-import { COLORS } from "../theme/palette";
+import { COLORS } from "../../theme/palette";
 
 const BUTTON_SIZE = 200;
 

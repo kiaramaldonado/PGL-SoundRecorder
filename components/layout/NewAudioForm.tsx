@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import TitleInput from "../TitleInput";
-import RecordButton from "../RecordButton";
+import TitleInput from "../ui/TitleInput";
+import RecordButton from "../ui/RecordButton";
 
 const NewAudioForm = () => {
   return (

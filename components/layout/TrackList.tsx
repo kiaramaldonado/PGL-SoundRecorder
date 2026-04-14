@@ -1,9 +1,9 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { COLORS } from "../theme/palette";
-import TrackCard from "./TrackCard";
-import { Track } from "../types/track.types";
+import { COLORS } from "../../theme/palette";
+import TrackCard from "../ui/TrackCard";
+import { Track } from "../../types/track.types";
 
 interface TrackListProps {
   tracks: Track[];
