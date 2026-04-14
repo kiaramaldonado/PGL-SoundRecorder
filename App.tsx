@@ -1,11 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from "react-native";
+import TrackList from "./components/layout/TrackList";
+import { COLORS } from "./theme/palette";
+import NewAudioForm from "./components/layout/NewAudioForm";
+import ConfirmModal from "./components/ui/ConfirmModal";
+import { useState } from "react";
 
 export default function App() {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <NewAudioForm />
+      <TrackList tracks={[]} onDeleteAll={() => setShowModal(true)} />
+      <ConfirmModal
+        visible={showModal}
+        onConfirm={() => {
+          console.log("Confirming deletion...");
+        }}
+        onCancel={() => setShowModal(false)}
+      />
     </View>
   );
 }
@@ -13,8 +26,9 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: COLORS.background,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
   },
 });
