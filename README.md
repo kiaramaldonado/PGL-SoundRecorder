@@ -6,9 +6,9 @@ En este repositorio se completará la práctica de implementar una aplicación q
 
 La aplicación permite a los usuarios grabar audios con facilidad, reproducirlos y gestionar su biblioteca de grabaciones.
 
-| Grabación                                      | Reproducción                                | Eliminación                                       |
-|------------------------------------------------|---------------------------------------------|---------------------------------------------------|
-| ![Grabando](./assets/gifs/final-product-1.GIF) | ![Reproducción](./assets/gifs/final-product-2.GIF) | ![Eliminación](./assets/gifs/final-product-3.GIF) |
+| Grabación                                      | Reproducción                                       | Eliminación                                       |
+|------------------------------------------------|----------------------------------------------------|---------------------------------------------------|
+| ![Grabando](./assets/gifs/final-product-1.gif) | ![Reproducción](./assets/gifs/final-product-2.gif) | ![Eliminación](./assets/gifs/final-product-3.gif) |
 
 
 
