@@ -1,37 +1,63 @@
-import { StyleSheet, View } from "react-native";
-import TrackList from "./components/layout/TrackList";
-import { COLORS } from "./theme/palette";
+import React, { useState, useEffect } from "react";
+import { StyleSheet } from "react-native";
+
+import {
+  getTracks,
+  deleteTrack,
+  clearAllTracks,
+} from "./services/storage.service";
+import { Track } from "./types/track.types";
 import NewAudioForm from "./components/layout/NewAudioForm";
+import TrackList from "./components/layout/TrackList";
 import ConfirmModal from "./components/ui/ConfirmModal";
-import { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-export default function App() {
-  const [showModal, setShowModal] = useState(false);
+export default function MainScreen() {
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // Recuperar audios grabados en sesiones anteriores
+  const loadTracks = async () => {
+    const storedTracks = await getTracks();
+
+    setTracks(storedTracks);
+  };
+
+  useEffect(() => {
+    loadTracks();
+  }, []);
+
+  const handleDeleteTrack = async (id: string) => {
+    await deleteTrack(id);
+    loadTracks();
+  };
+
+  const handleConfirmDeleteAll = async () => {
+    await clearAllTracks();
+    setModalVisible(false);
+    loadTracks();
+  };
+
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <NewAudioForm />
-      <TrackList tracks={[]} onDeleteAll={() => setShowModal(true)} />
+      <NewAudioForm onTrackAdded={loadTracks} />
+
+      <TrackList
+        tracks={tracks}
+        onDeleteTrack={handleDeleteTrack}
+        onDeleteAll={() => setModalVisible(true)}
+      />
+
       <ConfirmModal
-        visible={showModal}
-        onConfirm={() => {
-          console.log("Confirming deletion...");
-        }}
-        onCancel={() => setShowModal(false)}
+        visible={modalVisible}
+        onConfirm={handleConfirmDeleteAll}
+        onCancel={() => setModalVisible(false)}
       />
     </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.background,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 100,
-    paddingBottom: 50,
-    paddingHorizontal: 20,
-  },
+  container: { flex: 1, padding: 20, marginTop: 40 },
 });
