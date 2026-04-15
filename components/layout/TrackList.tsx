@@ -4,7 +4,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { COLORS } from "../../theme/palette";
 import TrackCard from "../ui/TrackCard";
 import { Track } from "../../types/track.types";
-import BouncingNoteLoader from "../ui/BouncingNoteLoader"; // <-- Importamos tu nuevo loader animado
+import BouncingNoteLoader from "../ui/BouncingNoteLoader";
 
 interface TrackListProps {
   tracks: Track[];
