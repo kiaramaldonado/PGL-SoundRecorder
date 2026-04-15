@@ -5,6 +5,9 @@ En este repositorio se completará la práctica de implementar una aplicación q
 ## Resultado Final
 
 La aplicación permite a los usuarios grabar audios con facilidad, reproducirlos y gestionar su biblioteca de grabaciones.
+- **Grabación**: Al pulsar el botón de grabación, se inicia la captura de audio y se muestra un indicador visual de que la grabación está en curso. Para pararlo solo hay que volver a pulsar el mismo botón.
+- **Reproducción**: Cada grabación se muestra en una tarjeta individual con su título, duración y fecha de creación. Al pulsar el botón de reproducción, el audio se reproduce y el botón cambia a un estado de pausa.
+- **Eliminación**: Se puede eliminar cada grabación deslizando la tarjeta hacia la izquierda para revelar un botón de papelera. También hay un botón de "Eliminar Todo" en la cabecera del listado que borra todas las grabaciones después de una confirmación.
 
 | Grabación                                      | Reproducción                                       | Eliminación                                       |
 |------------------------------------------------|----------------------------------------------------|---------------------------------------------------|
