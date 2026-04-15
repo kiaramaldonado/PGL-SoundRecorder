@@ -17,7 +17,8 @@ const NewAudioForm = ({ onTrackAdded }: NewAudioFormProps) => {
   const handleRecordFinish = async (uri: string, durationStr: string) => {
     try {
       if (!FileSystem.documentDirectory) {
-        throw new Error("El almacenamiento permanente no está disponible en este dispositivo.");
+        Alert.alert("Error", "El almacenamiento permanente no está disponible en este dispositivo.");
+        return;
       }
 
       const fileName = `audio_${Date.now()}.m4a`;
