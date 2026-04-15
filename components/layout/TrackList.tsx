@@ -9,15 +9,9 @@ interface TrackListProps {
   tracks: Track[];
   onDeleteAll?: () => void;
   onDeleteTrack?: (id: string) => void;
-  onPlayTrack?: (id: string) => void;
 }
 
-const TrackList = ({
-  tracks,
-  onDeleteAll,
-  onDeleteTrack,
-  onPlayTrack,
-}: TrackListProps) => {
+const TrackList = ({ tracks, onDeleteAll, onDeleteTrack }: TrackListProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -38,8 +32,8 @@ const TrackList = ({
               title={track.title}
               date={new Date(track.date)}
               duration={track.duration}
+              uri={track.uri}
               onDelete={() => onDeleteTrack && onDeleteTrack(track.id)}
-              onPlay={() => onPlayTrack && onPlayTrack(track.id)}
             />
           ))}
         </ScrollView>
