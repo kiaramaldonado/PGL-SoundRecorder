@@ -3,6 +3,9 @@
 
 En esta fase de la práctica se ha llevado a cabo el desarrollo de la interfaz de usuario (UI) en React Native, traduciendo el diseño propuesto a componentes funcionales. Se ha optado por una arquitectura modular, separando los elementos visuales en componentes reutilizables y manteniendo un código limpio y fuertemente tipado con TypeScript.
 
+El resultado es el siguiente diseño final, que se corresponde fielmente con el prototipo de Figma:
+![Diseño ya implementado](../assets/gifs/design-implementation.GIF)
+
 ## Estructura de Componentes
 
 La interfaz se ha dividido en diferentes componentes según su responsabilidad:
