@@ -16,11 +16,22 @@ export default function App() {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
+  // 1. Añadimos el estado para controlar la carga (inicia en true)
+  const [isLoading, setIsLoading] = useState(true);
+
   // Recuperar audios grabados en sesiones anteriores
   const loadTracks = async () => {
+    setIsLoading(true); // 2. Indicamos que empieza la carga
+
     const storedTracks = await getTracks();
 
-    setTracks(storedTracks);
+    // 3. Añadimos un pequeño retraso artificial para poder apreciar la animación
+    // Si en el futuro conectas esto a una base de datos real (Firebase, AWS),
+    // puedes quitar el setTimeout y dejar solo setTracks y setIsLoading.
+    setTimeout(() => {
+      setTracks(storedTracks);
+      setIsLoading(false); // 4. Indicamos que termina la carga
+    }, 800);
   };
 
   useEffect(() => {
@@ -38,23 +49,23 @@ export default function App() {
     loadTracks();
   };
 
-
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <NewAudioForm onTrackAdded={loadTracks} />
+      <GestureHandlerRootView style={styles.container}>
+        <NewAudioForm onTrackAdded={loadTracks} />
 
-      <TrackList
-        tracks={tracks}
-        onDeleteTrack={handleDeleteTrack}
-        onDeleteAll={() => setModalVisible(true)}
-      />
+        <TrackList
+            tracks={tracks}
+            isLoading={isLoading} // ¡Ahora sí existe y funciona!
+            onDeleteTrack={handleDeleteTrack}
+            onDeleteAll={() => setModalVisible(true)}
+        />
 
-      <ConfirmModal
-        visible={modalVisible}
-        onConfirm={handleConfirmDeleteAll}
-        onCancel={() => setModalVisible(false)}
-      />
-    </GestureHandlerRootView>
+        <ConfirmModal
+            visible={modalVisible}
+            onConfirm={handleConfirmDeleteAll}
+            onCancel={() => setModalVisible(false)}
+        />
+      </GestureHandlerRootView>
   );
 }
 
