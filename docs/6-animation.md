@@ -1,6 +1,6 @@
 [<- Volver al README.md](../README.md)
 
-# Animación Personalizada (Progreso del Audio)
+# 6. Animación Personalizada (Progreso del Audio)
 
 ![Animación del Borde de Progreso](../assets/gifs/progress.gif)
 

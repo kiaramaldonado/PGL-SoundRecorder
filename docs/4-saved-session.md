@@ -1,6 +1,6 @@
 [<- Volver al README.md](../README.md)
 
-# Documentación de Resolución: Persistencia y Recuperación de Audios
+# 4. Documentación de Resolución: Persistencia y Recuperación de Audios
 
 En este documento se detalla la estrategia y las herramientas utilizadas para resolver persistencia de grabaciones de audio entre sesiones de la aplicación, cumpliendo con los requisitos de almacenamiento en memoria, recuperación al inicio y creación de servicios modulares.
 

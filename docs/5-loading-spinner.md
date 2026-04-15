@@ -1,6 +1,6 @@
 [<- Volver al README.md](../README.md)
 
-# Componente de Carga Personalizado
+# 5. Componente de Carga Personalizado
 
 En este documento se detalla la creación e implementación de un componente de carga (loader) completamente a medida para la aplicación. 
 

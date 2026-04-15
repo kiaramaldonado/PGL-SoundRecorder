@@ -1,6 +1,6 @@
 [<- Volver al README.md](../README.md)
 
-# Diseño de la pantalla de grabación
+# 1. Diseño de la pantalla de grabación
 
 Este documento detalla la resolución técnica y funcional de la pantalla de grabación de audio, integrando controles de captura, feedback visual y gestión de archivos de audio.
 

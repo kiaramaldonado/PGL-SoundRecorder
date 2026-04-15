@@ -1,3 +1,4 @@
+[<- Volver al README.md](../README.md)
 # 2. Implementación de la Pantalla de Grabación
 
 En esta fase de la práctica se ha llevado a cabo el desarrollo de la interfaz de usuario (UI) en React Native, traduciendo el diseño propuesto a componentes funcionales. Se ha optado por una arquitectura modular, separando los elementos visuales en componentes reutilizables y manteniendo un código limpio y fuertemente tipado con TypeScript.
