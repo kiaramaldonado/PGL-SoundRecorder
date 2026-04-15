@@ -1,6 +1,7 @@
 import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
-import { View, Pressable, StyleSheet } from "react-native";
+import { View, Pressable, StyleSheet, Alert } from "react-native";
+import { AudioModule } from "expo-audio";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -24,6 +25,32 @@ export default function RecordButton() {
   const wave1Opacity = useSharedValue(0);
   const wave2Scale = useSharedValue(1);
   const wave2Opacity = useSharedValue(0);
+
+  // --- LÓGICA DE PERMISOS CON EXPO-AUDIO  ---
+  const handlePress = async () => {
+    if (isRecording) {
+      setIsRecording(false);
+    } else {
+      try {
+        let permission = await AudioModule.getRecordingPermissionsAsync();
+
+        if (permission.status !== "granted") {
+          permission = await AudioModule.requestRecordingPermissionsAsync();
+        }
+
+        if (permission.status === "granted") {
+          setIsRecording(true);
+        } else {
+          Alert.alert(
+            "Permiso denegado",
+            "La aplicación necesita acceso al micrófono para grabar audios. Puedes habilitarlo en los ajustes de tu dispositivo."
+          );
+        }
+      } catch (error) {
+        console.error("Error al gestionar los permisos de audio:", error);
+      }
+    }
+  };
 
   useEffect(() => {
     if (isRecording) {
@@ -121,7 +148,7 @@ export default function RecordButton() {
       <Animated.View style={[styles.buttonContainer, animatedButtonStyle]}>
         <Pressable
           style={styles.button}
-          onPress={() => setIsRecording(!isRecording)}
+          onPress={handlePress} /* Llamamos a nuestra función asíncrona */
         >
           <FontAwesome6 name="microphone" size={75} color={COLORS.primary} />
         </Pressable>
@@ -132,7 +159,7 @@ export default function RecordButton() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    marginVertical: 50,
     justifyContent: "center",
     alignItems: "center",
   },
