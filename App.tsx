@@ -12,7 +12,7 @@ import TrackList from "./components/layout/TrackList";
 import ConfirmModal from "./components/ui/ConfirmModal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-export default function MainScreen() {
+export default function App() {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
