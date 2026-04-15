@@ -14,6 +14,7 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { COLORS } from "../../theme/palette";
+import BouncingNoteLoader from "../ui/BouncingNoteLoader";
 
 const BUTTON_SIZE = 200;
 
@@ -38,7 +39,6 @@ export default function RecordButton({ onRecordFinish }: RecordButtonProps) {
       setIsRecordingUI(false);
       try {
         const durationMillis = Date.now() - startTime;
-
         const finalUri = audioRecorder.uri;
 
         await audioRecorder.stop();
@@ -82,8 +82,8 @@ export default function RecordButton({ onRecordFinish }: RecordButtonProps) {
           setIsRecordingUI(true);
         } else {
           Alert.alert(
-            "Permiso denegado",
-            "La aplicación necesita acceso al micrófono para grabar audios."
+              "Permiso denegado",
+              "La aplicación necesita acceso al micrófono para grabar audios."
           );
         }
       } catch (error) {
@@ -95,53 +95,53 @@ export default function RecordButton({ onRecordFinish }: RecordButtonProps) {
   useEffect(() => {
     if (isRecordingUI) {
       buttonScale.value = withRepeat(
-        withSequence(
-          withTiming(1.08, {
-            duration: 500,
-            easing: Easing.inOut(Easing.ease),
-          }),
-          withTiming(1, { duration: 500, easing: Easing.inOut(Easing.ease) })
-        ),
-        -1,
-        false
+          withSequence(
+              withTiming(1.08, {
+                duration: 500,
+                easing: Easing.inOut(Easing.ease),
+              }),
+              withTiming(1, { duration: 500, easing: Easing.inOut(Easing.ease) })
+          ),
+          -1,
+          false
       );
       wave1Scale.value = withRepeat(
-        withSequence(
-          withTiming(1, { duration: 0 }),
-          withTiming(1.5, { duration: 2000, easing: Easing.out(Easing.ease) })
-        ),
-        -1,
-        false
+          withSequence(
+              withTiming(1, { duration: 0 }),
+              withTiming(1.5, { duration: 2000, easing: Easing.out(Easing.ease) })
+          ),
+          -1,
+          false
       );
       wave1Opacity.value = withRepeat(
-        withSequence(
-          withTiming(0.6, { duration: 0 }),
-          withTiming(0, { duration: 2000, easing: Easing.out(Easing.ease) })
-        ),
-        -1,
-        false
+          withSequence(
+              withTiming(0.6, { duration: 0 }),
+              withTiming(0, { duration: 2000, easing: Easing.out(Easing.ease) })
+          ),
+          -1,
+          false
       );
       wave2Scale.value = withDelay(
-        1000,
-        withRepeat(
-          withSequence(
-            withTiming(1, { duration: 0 }),
-            withTiming(1.5, { duration: 2000, easing: Easing.out(Easing.ease) })
-          ),
-          -1,
-          false
-        )
+          1000,
+          withRepeat(
+              withSequence(
+                  withTiming(1, { duration: 0 }),
+                  withTiming(1.5, { duration: 2000, easing: Easing.out(Easing.ease) })
+              ),
+              -1,
+              false
+          )
       );
       wave2Opacity.value = withDelay(
-        1000,
-        withRepeat(
-          withSequence(
-            withTiming(0.6, { duration: 0 }),
-            withTiming(0, { duration: 2000, easing: Easing.out(Easing.ease) })
-          ),
-          -1,
-          false
-        )
+          1000,
+          withRepeat(
+              withSequence(
+                  withTiming(0.6, { duration: 0 }),
+                  withTiming(0, { duration: 2000, easing: Easing.out(Easing.ease) })
+              ),
+              -1,
+              false
+          )
       );
     } else {
       cancelAnimation(buttonScale);
@@ -170,19 +170,23 @@ export default function RecordButton({ onRecordFinish }: RecordButtonProps) {
   }));
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.wave, animatedWave1Style]} />
-      <Animated.View style={[styles.wave, animatedWave2Style]} />
-      <Animated.View style={[styles.buttonContainer, animatedButtonStyle]}>
-        <Pressable style={styles.button} onPress={handlePress}>
-          <FontAwesome6
-            name={isRecordingUI ? "stop" : "microphone"}
-            size={75}
-            color={isRecordingUI ? "#BA362B" : COLORS.primary}
-          />
-        </Pressable>
-      </Animated.View>
-    </View>
+      <View style={styles.container}>
+        <Animated.View style={[styles.wave, animatedWave1Style]} />
+        <Animated.View style={[styles.wave, animatedWave2Style]} />
+        <Animated.View style={[styles.buttonContainer, animatedButtonStyle]}>
+          <Pressable style={styles.button} onPress={handlePress}>
+            {isRecordingUI ? (
+                <BouncingNoteLoader size={60} color={COLORS.primary} />
+            ) : (
+                <FontAwesome6
+                    name="microphone"
+                    size={75}
+                    color={COLORS.primary}
+                />
+            )}
+          </Pressable>
+        </Animated.View>
+      </View>
   );
 }
 
