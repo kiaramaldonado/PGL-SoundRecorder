@@ -16,7 +16,6 @@ export default NewAudioForm;
 
 const styles = StyleSheet.create({
   container: {
-    gap: 50,
-    marginVertical: 30,
+    gap: 5,
   },
 });
