@@ -1,13 +1,22 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View, TextInput } from "react-native";
 import React from "react";
-import { TextInput } from "react-native-gesture-handler";
 import { COLORS } from "../../theme/palette";
 
-const TitleInput = () => {
+interface TitleInputProps {
+  value: string;
+  onChangeText: (text: string) => void;
+}
+
+const TitleInput = ({ value, onChangeText }: TitleInputProps) => {
   return (
     <View>
-      <TextInput placeholder="Título del nuevo audio" style={styles.input} />
-      <View style={[{ height: 4 }, { backgroundColor: COLORS.primary }]} />
+      <TextInput
+        placeholder="Título del nuevo audio"
+        style={styles.input}
+        value={value}
+        onChangeText={onChangeText}
+      />
+      <View style={{ height: 4, backgroundColor: COLORS.primary }} />
     </View>
   );
 };
@@ -18,5 +27,6 @@ const styles = StyleSheet.create({
   input: {
     fontSize: 26,
     textAlign: "center",
+    marginBottom: 8,
   },
 });
