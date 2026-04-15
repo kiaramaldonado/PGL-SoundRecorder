@@ -1,4 +1,3 @@
-// Estructura temporal de Track...
 export interface Track {
   id: string;
   title: string;
