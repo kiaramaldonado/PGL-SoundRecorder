@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -7,6 +7,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useAudioPlayer } from "expo-audio";
+
 import { COLORS } from "../../theme/palette";
 import { formatRelativeDate } from "../../utils/formatter";
 
@@ -16,87 +18,114 @@ interface TrackCardProps {
   title: string;
   date: Date;
   duration: string;
+  uri: string;
   onDelete?: () => void;
-  onPlay?: () => void;
 }
 
 export default function TrackCard({
-  title,
-  date,
-  duration,
-  onDelete,
-  onPlay,
-}: TrackCardProps) {
+                                    title,
+                                    date,
+                                    duration,
+                                    uri,
+                                    onDelete,
+                                  }: TrackCardProps) {
+  const player = useAudioPlayer(uri);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (player && isPlaying !== player.playing) {
+        setIsPlaying(player.playing);
+      }
+    }, 200);
+
+    return () => clearInterval(interval);
+  }, [player, isPlaying]);
+
   const translateX = useSharedValue(0);
 
   const panGesture = Gesture.Pan()
-    .activeOffsetX([-10, 10])
-    .onUpdate((event) => {
-      const maxTranslate = -ACTION_WIDTH * 1.1;
-      translateX.value = Math.max(
-        maxTranslate,
-        Math.min(0, event.translationX)
-      );
-    })
-    .onEnd((event) => {
-      const shouldBeOpen =
-        event.translationX < -ACTION_WIDTH / 2 || event.velocityX < -500;
+      .activeOffsetX([-10, 10])
+      .onUpdate((event) => {
+        const maxTranslate = -ACTION_WIDTH * 1.1;
+        translateX.value = Math.max(
+            maxTranslate,
+            Math.min(0, event.translationX)
+        );
+      })
+      .onEnd((event) => {
+        const shouldBeOpen =
+            event.translationX < -ACTION_WIDTH / 2 || event.velocityX < -500;
 
-      if (shouldBeOpen) {
-        translateX.value = withSpring(-ACTION_WIDTH, {
-          damping: 20,
-          stiffness: 200,
-          mass: 0.5,
-        });
-      } else {
-        translateX.value = withSpring(0, {
-          damping: 20,
-          stiffness: 200,
-          mass: 0.5,
-        });
-      }
-    });
+        if (shouldBeOpen) {
+          translateX.value = withSpring(-ACTION_WIDTH, {
+            damping: 20,
+            stiffness: 200,
+            mass: 0.5,
+          });
+        } else {
+          translateX.value = withSpring(0, {
+            damping: 20,
+            stiffness: 200,
+            mass: 0.5,
+          });
+        }
+      });
 
   const animatedCardStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
   }));
 
-  const handleDelete = () => {};
+  const handlePlayPause = () => {
+    if (!uri) {
+      Alert.alert("Error", "No hay archivo de audio asociado");
+      return;
+    }
+
+    // 3. Update the local state alongside the player commands
+    if (player.playing) {
+      player.pause();
+      setIsPlaying(false);
+    } else {
+      player.play();
+      setIsPlaying(true);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      {/* CAPA DE FONDO — botón eliminar */}
-      <View style={styles.actionContainer}>
-        <Pressable style={styles.deleteButton} onPress={handleDelete}>
-          <FontAwesome6 name="trash" size={22} color={COLORS.white} />
-        </Pressable>
-      </View>
-
-      {/* TARJETA DESLIZABLE */}
-      <GestureDetector gesture={panGesture}>
-        <Animated.View style={[styles.card, animatedCardStyle]}>
-          {/* Botón Play */}
-          <Pressable onPress={onPlay} style={styles.playButton}>
-            <FontAwesome6 name="play" size={30} color={COLORS.dark} />
+      <View style={styles.container}>
+        <View style={styles.actionContainer}>
+          <Pressable style={styles.deleteButton} onPress={onDelete}>
+            <FontAwesome6 name="trash" size={22} color={COLORS.white} />
           </Pressable>
+        </View>
 
-          {/* Textos */}
-          <View style={styles.textContainer}>
-            <Text style={styles.title} numberOfLines={1}>
-              {title}
-            </Text>
-            <Text style={styles.subtitle} numberOfLines={1}>
-              {formatRelativeDate(date)}
-            </Text>
-          </View>
+        <GestureDetector gesture={panGesture}>
+          <Animated.View style={[styles.card, animatedCardStyle]}>
+            <Pressable onPress={handlePlayPause} style={styles.playButton}>
+              <FontAwesome6
+                  name={isPlaying ? "pause" : "play"}
+                  size={24}
+                  color={COLORS.dark}
+                  style={{ marginLeft: isPlaying ? 0 : 3 }}
+              />
+            </Pressable>
 
-          {/* Badge de duración */}
-          <View style={styles.durationBadge}>
-            <Text style={styles.durationText}>{duration}</Text>
-          </View>
-        </Animated.View>
-      </GestureDetector>
-    </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.title} numberOfLines={1}>
+                {title}
+              </Text>
+              <Text style={styles.subtitle} numberOfLines={1}>
+                {formatRelativeDate(date)}
+              </Text>
+            </View>
+
+            <View style={styles.durationBadge}>
+              <Text style={styles.durationText}>{duration}</Text>
+            </View>
+          </Animated.View>
+        </GestureDetector>
+      </View>
   );
 }
 
@@ -124,7 +153,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   card: {
     width: "100%",
     height: "100%",
@@ -135,7 +163,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     overflow: "visible",
   },
-
   playButton: {
     width: 48,
     height: 48,
@@ -145,7 +172,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: 3,
   },
-
   textContainer: {
     flex: 1,
     marginLeft: 12,
@@ -162,7 +188,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "400",
   },
-
   durationBadge: {
     position: "absolute",
     bottom: 0,
