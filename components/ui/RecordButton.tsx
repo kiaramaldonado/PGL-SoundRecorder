@@ -1,7 +1,8 @@
 import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import { View, Pressable, StyleSheet, Alert } from "react-native";
-import { AudioModule } from "expo-audio";
+import { useAudioRecorder, RecordingPresets } from "expo-audio";
+import * as AudioModule from "expo-audio";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -16,45 +17,83 @@ import { COLORS } from "../../theme/palette";
 
 const BUTTON_SIZE = 200;
 
-export default function RecordButton() {
-  const [isRecording, setIsRecording] = useState(false);
+interface RecordButtonProps {
+  onRecordFinish: (uri: string, durationStr: string) => void;
+}
 
-  // Valores compartidos (Shared Values) para las animaciones
+export default function RecordButton({ onRecordFinish }: RecordButtonProps) {
+  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+
+  const [isRecordingUI, setIsRecordingUI] = useState(false);
+  const [startTime, setStartTime] = useState<number>(0);
+
   const buttonScale = useSharedValue(1);
   const wave1Scale = useSharedValue(1);
   const wave1Opacity = useSharedValue(0);
   const wave2Scale = useSharedValue(1);
   const wave2Opacity = useSharedValue(0);
 
-  // --- LÓGICA DE PERMISOS CON EXPO-AUDIO  ---
   const handlePress = async () => {
-    if (isRecording) {
-      setIsRecording(false);
+    if (isRecordingUI) {
+      setIsRecordingUI(false);
+      try {
+        const durationMillis = Date.now() - startTime;
+
+        const finalUri = audioRecorder.uri;
+
+        await audioRecorder.stop();
+
+        await AudioModule.setAudioModeAsync({
+          allowsRecording: false,
+          playsInSilentMode: true,
+        });
+
+        const totalSeconds = Math.floor(durationMillis / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const durationStr = `${minutes}:${seconds.toString().padStart(2, "0")}`;
+
+        if (finalUri) {
+          onRecordFinish(finalUri, durationStr);
+        } else {
+          Alert.alert("Error", "No se pudo generar el archivo de audio.");
+        }
+      } catch (error) {
+        console.error("Error al detener grabación:", error);
+        setIsRecordingUI(true);
+      }
     } else {
       try {
         let permission = await AudioModule.getRecordingPermissionsAsync();
-
-        if (permission.status !== "granted") {
+        if (!permission.granted) {
           permission = await AudioModule.requestRecordingPermissionsAsync();
         }
 
-        if (permission.status === "granted") {
-          setIsRecording(true);
+        if (permission.granted) {
+          await AudioModule.setAudioModeAsync({
+            allowsRecording: true,
+            playsInSilentMode: true,
+          });
+
+          await audioRecorder.prepareToRecordAsync();
+          audioRecorder.record();
+
+          setStartTime(Date.now());
+          setIsRecordingUI(true);
         } else {
           Alert.alert(
             "Permiso denegado",
-            "La aplicación necesita acceso al micrófono para grabar audios. Puedes habilitarlo en los ajustes de tu dispositivo."
+            "La aplicación necesita acceso al micrófono para grabar audios."
           );
         }
       } catch (error) {
-        console.error("Error al gestionar los permisos de audio:", error);
+        console.error("Error al iniciar grabación:", error);
       }
     }
   };
 
   useEffect(() => {
-    if (isRecording) {
-      // Animación de "Latido" del botón principal
+    if (isRecordingUI) {
       buttonScale.value = withRepeat(
         withSequence(
           withTiming(1.08, {
@@ -63,38 +102,36 @@ export default function RecordButton() {
           }),
           withTiming(1, { duration: 500, easing: Easing.inOut(Easing.ease) })
         ),
-        -1, // Infinito
-        false
-      );
-
-      // Animación de la Primera Onda Expansiva
-      wave1Scale.value = 1;
-      wave1Scale.value = withRepeat(
-        withTiming(1.5, { duration: 2000, easing: Easing.out(Easing.ease) }),
         -1,
         false
       );
-
-      wave1Opacity.value = withRepeat(
+      wave1Scale.value = withRepeat(
         withSequence(
-          withTiming(0.6, { duration: 0 }),
-          withTiming(0, { duration: 2000, easing: Easing.out(Easing.ease) }) // Se desvanece
+          withTiming(1, { duration: 0 }),
+          withTiming(1.5, { duration: 2000, easing: Easing.out(Easing.ease) })
         ),
         -1,
         false
       );
-
-      // Animación de la Segunda Onda Expansiva
-      wave2Scale.value = 1;
+      wave1Opacity.value = withRepeat(
+        withSequence(
+          withTiming(0.6, { duration: 0 }),
+          withTiming(0, { duration: 2000, easing: Easing.out(Easing.ease) })
+        ),
+        -1,
+        false
+      );
       wave2Scale.value = withDelay(
         1000,
         withRepeat(
-          withTiming(1.5, { duration: 2000, easing: Easing.out(Easing.ease) }),
+          withSequence(
+            withTiming(1, { duration: 0 }),
+            withTiming(1.5, { duration: 2000, easing: Easing.out(Easing.ease) })
+          ),
           -1,
           false
         )
       );
-
       wave2Opacity.value = withDelay(
         1000,
         withRepeat(
@@ -107,32 +144,26 @@ export default function RecordButton() {
         )
       );
     } else {
-      // Detener y resetear animaciones al pausar/detener grabación
       cancelAnimation(buttonScale);
       cancelAnimation(wave1Scale);
       cancelAnimation(wave1Opacity);
       cancelAnimation(wave2Scale);
       cancelAnimation(wave2Opacity);
-
-      // Regresar los valores a su estado natural suavemente
       buttonScale.value = withTiming(1, { duration: 300 });
       wave1Scale.value = withTiming(1, { duration: 300 });
       wave1Opacity.value = withTiming(0, { duration: 300 });
       wave2Scale.value = withTiming(1, { duration: 300 });
       wave2Opacity.value = withTiming(0, { duration: 300 });
     }
-  }, [isRecording]);
+  }, [isRecordingUI]);
 
-  // Estilos animados vinculados a los SharedValues
   const animatedButtonStyle = useAnimatedStyle(() => ({
     transform: [{ scale: buttonScale.value }],
   }));
-
   const animatedWave1Style = useAnimatedStyle(() => ({
     transform: [{ scale: wave1Scale.value }],
     opacity: wave1Opacity.value,
   }));
-
   const animatedWave2Style = useAnimatedStyle(() => ({
     transform: [{ scale: wave2Scale.value }],
     opacity: wave2Opacity.value,
@@ -140,17 +171,15 @@ export default function RecordButton() {
 
   return (
     <View style={styles.container}>
-      {/* Círculos que forman las ondas expansivas de fondo */}
       <Animated.View style={[styles.wave, animatedWave1Style]} />
       <Animated.View style={[styles.wave, animatedWave2Style]} />
-
-      {/* Botón Principal Interactivo */}
       <Animated.View style={[styles.buttonContainer, animatedButtonStyle]}>
-        <Pressable
-          style={styles.button}
-          onPress={handlePress} /* Llamamos a nuestra función asíncrona */
-        >
-          <FontAwesome6 name="microphone" size={75} color={COLORS.primary} />
+        <Pressable style={styles.button} onPress={handlePress}>
+          <FontAwesome6
+            name={isRecordingUI ? "stop" : "microphone"}
+            size={75}
+            color={isRecordingUI ? "#BA362B" : COLORS.primary}
+          />
         </Pressable>
       </Animated.View>
     </View>
