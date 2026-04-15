@@ -4,12 +4,13 @@ import { COLORS } from "./theme/palette";
 import NewAudioForm from "./components/layout/NewAudioForm";
 import ConfirmModal from "./components/ui/ConfirmModal";
 import { useState } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <NewAudioForm />
       <TrackList tracks={[]} onDeleteAll={() => setShowModal(true)} />
       <ConfirmModal
@@ -19,7 +20,7 @@ export default function App() {
         }}
         onCancel={() => setShowModal(false)}
       />
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
