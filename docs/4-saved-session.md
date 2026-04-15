@@ -57,4 +57,10 @@ Esta implementación cumple exactamente con el requisito de la tarea: al montars
 4.  **Recuperación:** Al reiniciar la app, el `useEffect` en `App` recupera los objetos `Track` del `AsyncStorage`.
 5.  **Reproducción:** El componente `TrackCard` recibe la URI permanente y utiliza `expo-audio` para reproducir el archivo directamente desde el almacenamiento del dispositivo.
 
+## Referencias Oficiales
+
+- **Expo File System:** https://docs.expo.dev/versions/latest/sdk/filesystem/
+- **Expo File System - Legacy API:** https://docs.expo.dev/versions/latest/sdk/filesystem/#using-legacy-filesystem-api
+- **AsyncStorage (React Native Community):** https://docs.expo.dev/versions/latest/sdk/async-storage/
+
 [<- Volver al README.md](../README.md)

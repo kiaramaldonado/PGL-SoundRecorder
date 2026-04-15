@@ -56,4 +56,11 @@ Cuando el usuario inicia la grabación, el estado `isRecordingUI` cambia a `true
 
 Esto genera un efecto visual donde el micrófono cobra vida y "baila" al ritmo de la grabación de audio, ofreciendo al usuario una confirmación clara, original y muy dinámica de que la aplicación está registrando su voz.
 
+## Referencias Oficiales
+
+- **react-native-reanimated - Animations:** https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/
+- **react-native-reanimated - withRepeat:** https://docs.swmansion.com/react-native-reanimated/docs/2.x/api/animations/withRepeat/
+- **react-native-reanimated - withSequence:** https://docs.swmansion.com/react-native-reanimated/docs/animations/withSequence/
+- **react-native-reanimated - Easing:** https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/customizing-animation/
+
 [<- Volver al README.md](../README.md)

@@ -36,6 +36,9 @@ Para lograr una experiencia de usuario fluida y un diseño interactivo, se han i
 - **`react-native-gesture-handler`**: Utilizado en el componente `TrackCard` (`Gesture.Pan`) para detectar de forma precisa los movimientos táctiles horizontales del usuario y permitir el borrado individual.
 - **`@expo/vector-icons`**: Proveedor de la iconografía vectorial de la aplicación (iconos de _FontAwesome6_ como `microphone`, `play`, `trash` y `triangle-exclamation`).
 
----
+## Referencias Oficiales
+
+- **react-native-reanimated:** https://docs.swmansion.com/react-native-reanimated/
+- **react-native-gesture-handler:** https://docs.swmansion.com/react-native-gesture-handler/
 
 [<- Volver al README.md](../README.md)

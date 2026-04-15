@@ -35,4 +35,10 @@ Se calcula el progreso normalizado (de 0 a 1) dividiendo el tiempo actual (`curr
 ### 4. Efecto de "Fade Out" al Finalizar
 Para pulir la experiencia de usuario (UX), se ha añadido un valor compartido adicional (`borderOpacity`). Cuando el progreso del audio supera el 99% (`currentProgress > 0.99`), se dispara una animación de opacidad que desvanece el borde suavemente (`duration: 600ms`), devolviendo la tarjeta a su estado original de reposo sin cortes bruscos. Al volver a darle al "Play", el borde reaparece rápidamente con un "Fade In" de 300ms.
 
+## Referencias Oficiales
+
+- **react-native-svg:** https://github.com/software-mansion/react-native-svg
+- **SVG Stroke Properties:** https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray
+- **react-native-reanimated - useAnimatedProps:** https://docs.swmansion.com/react-native-reanimated/docs/core/useAnimatedProps/
+
 [<- Volver al README.md](../README.md)

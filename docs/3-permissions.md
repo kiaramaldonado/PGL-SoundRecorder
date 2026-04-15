@@ -56,4 +56,8 @@ const handlePress = async () => {
 };
 ```
 
+## Referencias Oficiales
+
+- **Expo Audio - Recording Permissions:** https://docs.expo.dev/versions/latest/sdk/audio/
+
 [<- Volver al README.md](../README.md)
